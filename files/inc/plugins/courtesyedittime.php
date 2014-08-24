@@ -1,8 +1,8 @@
 <?php
 /**
- * Courtesy Edit Time 0.1
+ * Courtesy Edit Time 1.1
 
- * Copyright 2011 Matthew Rogowski
+ * Copyright 2014 Matthew Rogowski
 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ if(!defined("IN_MYBB"))
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 
-$plugins->add_hook("datahandler_post_update", "courtesyedittime_update_edittime", 10);
 $plugins->add_hook("postbit", "courtesyedittime_postbit");
 $plugins->add_hook("xmlhttp", "courtesyedittime_xmlhttp");
 
@@ -31,42 +30,13 @@ function courtesyedittime_info()
 	return array(
 		"name" => "Courtesy Edit Time",
 		"description" => "Allow a courtesy edit time, whereby the 'edited by' message won't show up for a set amount of time.",
-		"website" => "http://mattrogowski.co.uk/mybb/plugins/plugin/courtesy-edit-time",
-		"author" => "MattRogowski",
-		"authorsite" => "http://mattrogowski.co.uk/mybb/",
-		"version" => "1.0",
-		"compatibility" => "16*",
+		"website" => "https://github.com/MattRogowski/Courtesy-Edit-Time",
+		"author" => "Matt Rogowski",
+		"authorsite" => "http://mattrogowski.co.uk",
+		"version" => "1.1",
+		"compatibility" => "16*,18*",
 		"guid" => "e61aa4cc5226849bc351fbf8c80a751d"
 	);
-}
-
-function courtesyedittime_install()
-{
-	global $db;
-	
-	if(!$db->field_exists("edittime2", "posts"))
-	{
-		$db->add_column("posts", "edittime2", "INT(10) NOT NULL DEFAULT '0'");
-	}
-	
-	$db->write_query("UPDATE " . TABLE_PREFIX . "posts SET `edittime2` = `edittime`");
-}
-
-function courtesyedittime_is_installed()
-{
-	global $db;
-	
-	return $db->field_exists("edittime2", "posts");
-}
-
-function courtesyedittime_uninstall()
-{
-	global $db;
-	
-	if($db->field_exists("edittime2", "posts"))
-	{
-		$db->drop_column("posts", "edittime2");
-	}
 }
 
 function courtesyedittime_activate()
@@ -127,25 +97,11 @@ function courtesyedittime_deactivate()
 	rebuild_settings();
 }
 
-function courtesyedittime_update_edittime(&$data)
-{
-	$data->post_update_data['edittime2'] = intval($data->post_update_data['edittime']);
-}
-
 function courtesyedittime_postbit(&$post)
 {
-	global $mybb;
-	
-	if($mybb->settings['courtesyedittime'] > 0)
+	if(courtesyedittime_hide_message($post, $post['edittime']))
 	{
-		if($post['edittime2'])
-		{
-			$difference = $post['edittime2'] - $post['dateline'];
-			if($difference <= $mybb->settings['courtesyedittime'])
-			{
-				$post['editedmsg'] = "";
-			}
-		}
+		$post['editedmsg'] = "";
 	}
 }
 
@@ -162,18 +118,23 @@ function courtesyedittime_xmlhttp()
 function courtesyedittime_do_xmlhttp(&$data)
 {
 	global $mybb;
-	
-	if($mybb->settings['courtesyedittime'] > 0)
+
+	$post = get_post($data->pid);
+	if(courtesyedittime_hide_message($post, TIME_NOW))
 	{
-		if($data->post_update_data['edittime2'])
-		{
-			$post_info = get_post($data->pid);
-			$difference = $data->post_update_data['edittime2'] - $post_info['dateline'];
-			if($difference <= $mybb->settings['courtesyedittime'])
-			{
-				$mybb->settings['showeditedby'] = 0;
-			}
-		}
+		$mybb->settings['showeditedby'] = 0;
 	}
+}
+
+function courtesyedittime_hide_message($post, $edittime)
+{
+	global $mybb;
+
+	if($mybb->settings['courtesyedittime'] > 0 && ($post['dateline'] + $mybb->settings['courtesyedittime']) > $edittime)
+	{
+		return true;
+	}
+
+	return false;
 }
 ?>
