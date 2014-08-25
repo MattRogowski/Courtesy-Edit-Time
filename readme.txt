@@ -4,7 +4,7 @@ Website: https://github.com/MattRogowski/Courtesy-Edit-Time
 Author: Matt Rogowski
 Authorsite: http://mattrogowski.co.uk
 Version: 1.1
-Compatibility: 1.8.x
+Compatibility: 1.6.x, 1.8.x
 Files: 1
 Settings added: 1 (1 group)
 
@@ -21,7 +21,7 @@ This is useful for if you, like me, only notice all the typos you made after you
 Change Log:
 04/12/10 - v0.1 -> Initial 'beta' release.
 03/12/11 - v0.1 -> v1.0 -> Made compatible with MyBB 1.6.5. To upgrade, reupload ./inc/plugins/courtesyedittime.php
-24/08/14 - v1.0 -> v1.1 -> MyBB 1.8 compatible. Code cleaned up and database field removed. To upgrade, uninstall, reupload ./inc/plugins/courtesyedittime.php, activate.
+25/08/14 - v1.0 -> v1.1 -> MyBB 1.8 compatible. Code cleaned up and database field removed. To upgrade, uninstall, reupload ./inc/plugins/courtesyedittime.php, activate.
 
 Copyright 2014 Matthew Rogowski
 
