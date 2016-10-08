@@ -1,8 +1,8 @@
 <?php
 /**
- * Courtesy Edit Time 1.1
+ * Courtesy Edit Time 1.1.0
 
- * Copyright 2014 Matthew Rogowski
+ * Copyright 2016 Matthew Rogowski
 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ function courtesyedittime_info()
 		"description" => "Allow a courtesy edit time, whereby the 'edited by' message won't show up for a set amount of time.",
 		"website" => "https://github.com/MattRogowski/Courtesy-Edit-Time",
 		"author" => "Matt Rogowski",
-		"authorsite" => "http://mattrogowski.co.uk",
-		"version" => "1.1",
+		"authorsite" => "https://matt.rogow.ski",
+		"version" => "1.1.0",
 		"compatibility" => "16*,18*",
-		"guid" => "e61aa4cc5226849bc351fbf8c80a751d"
+		"codename" => "courtesyedittime"
 	);
 }
 
